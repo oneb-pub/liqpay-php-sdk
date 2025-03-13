@@ -25,10 +25,10 @@
   ],
   "require": {
     "php": ">=7.4",
-    "guzzlehttp/guzzle": "^7.0",
+    "guzzlehttp/guzzle": "^7",
     "ext-json": "*",
     "webmozart/assert": "^1.11",
-    "nesbot/carbon": "^2.73"
+    "nesbot/carbon": "^2"
   },
   "autoload": {
     "psr-4": {
