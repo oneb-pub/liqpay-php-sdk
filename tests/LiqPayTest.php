@@ -2,6 +2,7 @@
 
 
 use PHPUnit\Framework\TestCase;
+use src\Client;
 
 class LiqPayTest extends TestCase
 {
@@ -14,9 +15,9 @@ class LiqPayTest extends TestCase
         $privateKey = 'private_key';
         $apiUrl = 'https://www.liqpay.ua';
         
-        $instance = new LiqPay($publicKey, $privateKey, $apiUrl);
+        $instance = new Client($publicKey, $privateKey, $apiUrl);
         
-        $this->assertInstanceOf(LiqPay::class, $instance);
+        $this->assertInstanceOf(Client::class, $instance);
     }
     
     public function testConstructorWithMissingPublicKey()
@@ -24,7 +25,7 @@ class LiqPayTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('public_key is empty');
         
-        new LiqPay('', 'private_key');
+        new Client('', 'private_key');
     }
     
     public function testConstructorWithMissingPrivateKey()
@@ -32,7 +33,7 @@ class LiqPayTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('private_key is empty');
         
-        new LiqPay('public_key', '');
+        new Client('public_key', '');
     }
     
     
@@ -41,7 +42,7 @@ class LiqPayTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('version is null');
         
-        $liqPay = new LiqPay($this->publicKey, $this->privateKey);
+        $liqPay = new Client($this->publicKey, $this->privateKey);
         $liqPay->api('/testpath');
     }
     
@@ -72,7 +73,7 @@ class LiqPayTest extends TestCase
     
     public function testCnbSignature()
     {
-        $liqPay = $this->getMockBuilder(LiqPay::class)
+        $liqPay = $this->getMockBuilder(Client::class)
             ->setConstructorArgs([$this->publicKey, $this->privateKey])
             ->onlyMethods(['encode_params', 'str_to_sign'])
             ->getMock();
@@ -103,7 +104,7 @@ class LiqPayTest extends TestCase
         $publicKey = 'your_public_key';
         $privateKey = 'your_private_key';
         $apiUrl = 'https://api.example.com';
-        $liqPay = new LiqPay($publicKey, $privateKey, $apiUrl);
+        $liqPay = new Client($publicKey, $privateKey, $apiUrl);
         
         // Set a value to _server_response_code for testing
         $reflection = new ReflectionClass($liqPay);

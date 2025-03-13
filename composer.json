@@ -1,25 +1,39 @@
 {
-    "name":"liqpay/liqpay",
-    "type": "library",
-    "description": "SDK for Liqpay",
-    "keywords": ["liqpay","pay"],
-    "homepage": "https://github.com/liqpay/sdk-php",
-    "license": "OSL 3.0",
-    "authors": [
-        {
-            "name": "Liqpay",
-            "email": "support@liqpay.ua",
-            "homepage": "https://www.liqpay.ua/",
-            "role": "Developer"
-        }
-    ],
-    "require":{
-        "php":">=5.6.0",
-        "phpunit/phpunit": ">=10.3.1"
+  "name": "oneb-pub/liqpay-php-sdk",
+  "type": "library",
+  "description": "PHP SDK for LiqPay",
+  "keywords": [
+    "liqpay",
+    "pay",
+    "privatbank"
+  ],
+  "homepage": "https://github.com/oneb-pub/liqpay-sdk-php",
+  "license": "Apache-2.0",
+  "authors": [
+    {
+      "name": "Liqpay",
+      "email": "support@liqpay.ua",
+      "homepage": "https://www.liqpay.ua/",
+      "role": "Developer"
     },
-    "autoload":{
-        "classmap":[
-            "./LiqPay.php"
-        ]
+    {
+      "name": "OneB",
+      "email": "sale@oneb.app",
+      "homepage": "https://oneb.app/",
+      "role": "Developer"
     }
+  ],
+  "require": {
+    "php": ">=7.4",
+    "guzzlehttp/guzzle": "^7.0",
+    "ext-json": "*",
+    "webmozart/assert": "^1.11",
+    "nesbot/carbon": "^2.73"
+  },
+  "autoload": {
+    "psr-4": {
+      "LiqPay\\": "src/"
+    }
+  },
+  "minimum-stability": "stable"
 }
