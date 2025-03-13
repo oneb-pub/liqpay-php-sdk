@@ -1,7 +1,6 @@
-<img height="56px" src="https://oneb.app/_ipx/q_95/image/LogoOneB.png" alt="OneB Logo">
----
+## <img height="24px" src="https://www.liqpay.ua/logo_lp_national_dk.svg?v=1740668938035"> PHP SDK від <img height="36px" src="https://oneb.app/_ipx/q_95/image/LogoOneB.png" alt="OneB Logo">
 
-### <img height="14px" src="https://www.liqpay.ua/logo_lp_national_dk.svg?v=1740668938035"> PHP SDK
+---
 Редакція від OneB
 #### Requirements
 - php >=7.4
