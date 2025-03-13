@@ -1,30 +1,27 @@
-sdk-php
-=======
+### LiqPay PHP SDK
+(Редакція від OneB)
 
-LiqPay SDK-PHP
+#### Поточна документація від LiqPay
+https://www.liqpay.ua/documentation/en
 
-Documentation https://www.liqpay.ua/documentation/en
-
-
-Встановлення
-Для втсновлення плагіна за допомогою composer необхідно додати в composer.json секцію repositories:
+#### Встановлення
+```bash
+composer require oneb-pub/liqpay-php-sdk
 ```
-"repositories": [
-    {
-        "type":"package",
-        "package": {
-          "name": "liqpay/sdk-php",
-          "version":"master",
-          "source": {
-              "url": "https://github.com/liqpay/sdk-php.git",
-              "type": "git",
-              "reference":"master"
-            }
-        }
-    }
-],
 
-І в секцію require:
- "require": {
-    "liqpay/sdk-php": "master"
-}
+#### Генерація посилання на оплату
+```php
+$client = new \LiqPay\Client('<YOUR_PUBLIC_KEY>','<YOUR_PRIVATE_KEY>');
+
+$generator = new \LiqPay\PaymentLink($client);
+$url = $generator->setAmount(100.12)
+    ->setCurrency('USD')
+    ->setDescription('Оплата рахунку №1251-2')
+    ->setLanguage('uk')
+    ->setReferenceId('12344')
+    ->setReturnUrl('https://oneb.app')
+    ->setExpirationDate(\Carbon\Carbon::now()->addHours(12))
+    ->generate();
+
+print_r(PHP_EOL.$url.PHP_EOL);
+```
