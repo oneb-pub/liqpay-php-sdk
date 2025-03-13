@@ -1,7 +1,7 @@
 <?php
 include __DIR__ . '/../vendor/autoload.php';
 
-$client = new \LiqPay\Client('sandbox_i15811467776','sandbox_lvZ4MkXLtaXx0ogS64Rt9Qj0ogIRKClMsdtgSs12');
+$client = new \LiqPay\Client('sandbox_test','sandbox_test');
 
 $generator = new \LiqPay\PaymentLink($client);
 $url = $generator->setAmount(100.12)
