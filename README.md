@@ -1,6 +1,9 @@
 ### LiqPay PHP SDK
 (Редакція від OneB)
 
+#### Requirements
+- php >=7.4
+
 #### Поточна документація від LiqPay
 https://www.liqpay.ua/documentation/en
 
