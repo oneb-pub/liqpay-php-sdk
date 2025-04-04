@@ -6,19 +6,17 @@ use Carbon\Carbon;
 use Webmozart\Assert\Assert;
 use Webmozart\Assert\InvalidArgumentException;
 
-class PaymentLink
+class PaymentByToken
 {
     private Client $client;
     private $amount;
+    private string $card_token;
     private string $currency;
     private string $description;
     private string $reference_id;
-    private ?string $return_url = null;
     private ?string $webhook_url = null;
-    private $expiration_date = null;
     private ?string $language = null;
-
-    private bool $create_token = false;
+    private bool $is_preparation = false;
 
     public function __construct(Client $client)
     {
@@ -50,21 +48,18 @@ class PaymentLink
         return $this;
     }
 
+    public function setCardToken(string $token): self
+    {
+        Assert::stringNotEmpty($token, 'Нема токену картки');
+        $this->card_token = $token;
+        return $this;
+    }
+
     public function setReferenceId(string $order_id): self
     {
         Assert::stringNotEmpty($order_id, 'Портібно вказати унікальний ID покупки у Вашому магазині');
         Assert::maxLength($order_id, 255, 'Завеликий ідентифікатор покупки');
         $this->reference_id = $order_id;
-        return $this;
-    }
-
-    public function setReturnUrl(string $return_url): self
-    {
-        Assert::maxLength($return_url, 510, 'Завеликий URL повернення');
-        if (!filter_var($return_url, FILTER_VALIDATE_URL)) {
-            throw new InvalidArgumentException("Значення має бути валідною URL");
-        }
-        $this->return_url = $return_url;
         return $this;
     }
 
@@ -78,19 +73,6 @@ class PaymentLink
         return $this;
     }
 
-    public function setExpirationDate($expiration_date): self
-    {
-        if (is_string($expiration_date)) {
-            $expiration_date = Carbon::createFromTimestamp(strtotime($expiration_date))->format('Y-m-d H:i:s');
-        } elseif ($expiration_date instanceof Carbon) {
-            $expiration_date = $expiration_date->format('Y-m-d H:i:s');
-        } else {
-            throw new InvalidArgumentException('Дата закінчення дії посилання на оплату вказана невірно');
-        }
-        $this->expiration_date = $expiration_date;
-        return $this;
-    }
-
     public function setLanguage(string $language): self
     {
         Assert::inArray($language, ['uk', 'en'], 'Вказана мова не підтримується');
@@ -98,18 +80,20 @@ class PaymentLink
         return $this;
     }
 
-    public function createToken(bool $create = true): self
+    public function dryCharge(): array
     {
-        $this->create_token = $create;
-        return $this;
+        $this->is_preparation = true;
+        return $this->charge();
     }
 
-    public function generate(): string
+    public function charge(): array
     {
         Assert::notNull($this->amount);
+        Assert::notNull($this->card_token);
         Assert::notNull($this->currency);
         Assert::notNull($this->description);
         Assert::notNull($this->reference_id);
+        Assert::notNull($this->webhook_url);
 
         $params = [
             'action' => 'pay',
@@ -118,30 +102,17 @@ class PaymentLink
             'description' => $this->description,
             'order_id' => $this->reference_id,
             'version' => '3',
+            'card_token' => $this->card_token,
+            'server_url' => $this->webhook_url
         ];
-        if ($this->return_url) {
-            $params['result_url'] = $this->return_url;
-        }
-        if ($this->webhook_url) {
-            $params['server_url'] = $this->webhook_url;
-        }
-        if ($this->expiration_date) {
-            $params['expiration_date'] = $this->expiration_date;
-        }
         if ($this->language) {
             $params['language'] = $this->language;
         }
-        if ($this->create_token) {
-            Assert::notNull($this->webhook_url);
-            $params['recurringbytoken'] = '1';
+        if($this->is_preparation){
+            $params['prepare'] = '1';
         }
 
-        ['url' => $checkout_url, 'data' => $data, 'signature' => $signature] = $this->client->cnb_form_raw($params);
-
-        return $checkout_url . '?' . http_build_query([
-                'data' => $data,
-                'signature' => $signature,
-            ]);
+        return $this->client->api('request', $params);
     }
 
 }

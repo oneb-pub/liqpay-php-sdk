@@ -30,10 +30,18 @@
     "webmozart/assert": "^1.11",
     "nesbot/carbon": "^2"
   },
+  "require-dev": {
+    "symfony/var-dumper": "^5.4"
+  },
   "autoload": {
     "psr-4": {
       "LiqPay\\": "src/"
     }
+  },
+  "autoload-dev": {
+    "files": [
+      "tests/helpers.php"
+    ]
   },
   "minimum-stability": "stable"
 }
