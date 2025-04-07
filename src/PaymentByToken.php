@@ -17,6 +17,7 @@ class PaymentByToken
     private ?string $webhook_url = null;
     private ?string $language = null;
     private bool $is_preparation = false;
+    private ?bool $is_recurring = null;
 
     public function __construct(Client $client)
     {
@@ -80,6 +81,18 @@ class PaymentByToken
         return $this;
     }
 
+    public function sellerInitiator(): self
+    {
+        $this->is_recurring = true;
+        return $this;
+    }
+
+    public function payerInitiator(): self
+    {
+        $this->is_recurring = false;
+        return $this;
+    }
+
     public function dryCharge(): array
     {
         $this->is_preparation = true;
@@ -110,6 +123,9 @@ class PaymentByToken
         }
         if($this->is_preparation){
             $params['prepare'] = '1';
+        }
+        if(isset($this->is_recurring)){
+            $params['is_recurring'] = $this->is_recurring;
         }
 
         return $this->client->api('request', $params);
