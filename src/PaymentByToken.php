@@ -99,7 +99,7 @@ class PaymentByToken
         return $this->charge();
     }
 
-    public function charge(): array
+    public function charge(array $extraArguments = []): array
     {
         Assert::notNull($this->amount);
         Assert::notNull($this->card_token);
@@ -121,11 +121,14 @@ class PaymentByToken
         if ($this->language) {
             $params['language'] = $this->language;
         }
-        if($this->is_preparation){
+        if ($this->is_preparation) {
             $params['prepare'] = '1';
         }
-        if(isset($this->is_recurring)){
+        if (isset($this->is_recurring)) {
             $params['is_recurring'] = $this->is_recurring;
+        }
+        if($extraArguments){
+            $params = array_merge($params, $extraArguments);
         }
 
         return $this->client->api('request', $params);
