@@ -93,10 +93,10 @@ class PaymentByToken
         return $this;
     }
 
-    public function dryCharge(): array
+    public function prepare(bool $prepare = true): self
     {
         $this->is_preparation = true;
-        return $this->charge();
+        return $this;
     }
 
     public function charge(array $extraArguments = []): array
@@ -127,7 +127,7 @@ class PaymentByToken
         if (isset($this->is_recurring)) {
             $params['is_recurring'] = $this->is_recurring;
         }
-        if($extraArguments){
+        if ($extraArguments) {
             $params = array_merge($params, $extraArguments);
         }
 

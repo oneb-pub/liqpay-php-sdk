@@ -44,14 +44,14 @@ $charge = $client->createPaymentByToken()
     ->setReferenceId('12345_lkm347sd') //Ваш унікальний ідентифікатор даного платежу
     ->setWebhookUrl('https://example.com/liqpay-webhook');
  
-$result = $charge->dryCharge(); // Підготовка платежу - необовʼязковий крок
+$result = $charge->prepare()->charge(); // Підготовка платежу - необовʼязковий крок
 if(in_array($result['status'],['error','failure'])){
     $errorDescription = $client->tryDescribeError($result['err_code'])??$result['err_description']??'Невідома помилка';
     print "Помилка підготовки платежу: {$errorDescription}";
     exit(1);
 }
     
-$result = $charge->charge(); 
+$result = $charge->prepare(false)->charge(); 
 
 print_r(PHP_EOL.$result.PHP_EOL);
 ```
