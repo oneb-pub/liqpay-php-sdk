@@ -95,7 +95,7 @@ class PaymentByToken
 
     public function prepare(bool $prepare = true): self
     {
-        $this->is_preparation = true;
+        $this->is_preparation = $prepare;
         return $this;
     }
 
